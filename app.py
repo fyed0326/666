@@ -1,8 +1,12 @@
 
 from flask import Flask, request, jsonify
 import time
+import logging
 
 app = Flask(__name__)
+
+# 設定 logging（Render Logs 可見）
+logging.basicConfig(level=logging.INFO)
 
 @app.route("/")
 def index():
@@ -11,7 +15,7 @@ def index():
 @app.route("/maker", methods=["POST"])
 def maker():
     data = request.json
-    print("🟢 收到 Webhook 訊號：", data)
+    app.logger.info("🟢 收到 Webhook 訊號：%s", data)
 
     results = {
         "BTCUSDT": {"status": "success", "orderId": f"demo-{int(time.time())}"},
@@ -19,7 +23,7 @@ def maker():
         "SOLUSDT": {"status": "success", "orderId": f"demo-{int(time.time())}"}
     }
 
-    print("✅ 已模擬掛單結果：", results)
+    app.logger.info("✅ 已模擬掛單結果：%s", results)
 
     return jsonify({"message": "已處理掛單", "results": results})
 
