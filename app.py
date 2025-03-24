@@ -1,31 +1,24 @@
-
 from flask import Flask, request, jsonify
-import time
-import logging
+from bitunix_api import place_order
+import config
 
 app = Flask(__name__)
 
-# 設定 logging（Render Logs 可見）
-logging.basicConfig(level=logging.INFO)
-
 @app.route("/")
 def index():
-    return "Bitunix Maker Bot Online"
+    return "✅ Bitunix Trading Bot is Live!"
 
-@app.route("/maker", methods=["POST"])
-def maker():
+@app.route("/webhook", methods=["POST"])
+def webhook():
     data = request.json
-    app.logger.info("🟢 收到 Webhook 訊號：%s", data)
+    symbol = data.get("symbol")
+    action = data.get("action")
+    size = data.get("size")
+    price = data.get("price")
+    reason = data.get("reason", "signal")
 
-    results = {
-        "BTCUSDT": {"status": "success", "orderId": f"demo-{int(time.time())}"},
-        "ETHUSDT": {"status": "success", "orderId": f"demo-{int(time.time())}"},
-        "SOLUSDT": {"status": "success", "orderId": f"demo-{int(time.time())}"}
-    }
-
-    app.logger.info("✅ 已模擬掛單結果：%s", results)
-
-    return jsonify({"message": "已處理掛單", "results": results})
+    result = place_order(symbol, action, size, price, reason)
+    return jsonify({"status": "ok", "result": result})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(debug=True)
