@@ -1,0 +1,9 @@
+{
+  "api_key": "your_key_here",
+  "api_secret": "your_secret_here",
+  "max_positions": 20,
+  "cooldown_seconds": 180,
+  "take_profit": 0.008,
+  "stop_loss": 0.005,
+  "line_notify_token": "yCXt120brKH8dRM4cpV8OFL4rJttqZjYeEuhv0qpTYQ"
+}
